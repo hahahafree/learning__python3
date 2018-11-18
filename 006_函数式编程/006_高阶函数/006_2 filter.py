@@ -12,3 +12,28 @@ def not_empty(s):
 a2 = list(filter(not_empty,['A','','B',None,'C','']))
 print('去掉空字符串：',a2)
 
+#可见用filter()这个高阶函数，关键在于正确实现一个“筛选”函数。
+#注意到filter()函数返回的是一个Iterator，也就是一个惰性序列，所以要强迫filter()完成计算结果，
+# 需要用list()函数获得所有结果并返回list。
+def _odd_iter():
+    n=1
+    while True:
+        n=n+2
+        yield n
+
+def _not_divisible(n):
+    return lambda x:x % n >0
+
+def primes():
+    yield 2
+    it = _odd_iter()
+    while True:
+        n = next(it)
+        yield n
+        it = filter(_not_divisible(n),it)
+
+for n in primes():
+    if n < 1000:
+        print(n)
+    else:
+        break
